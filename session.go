@@ -6,12 +6,14 @@ import (
 	"crypto/rsa"
 	"crypto/sha1"
 	"crypto/tls"
+	"crypto/x509"
 	"database/sql"
 	"database/sql/driver"
 	"encoding/asn1"
 	"encoding/pem"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net"
 	"regexp"
 	"strconv"
@@ -158,13 +160,35 @@ func newSession(prm connParams) (s *session, err error) {
 
 // dial connects to the target host and returns a writer.
 func dial(prm connParams) (io.ReadWriteCloser, error) {
-	if prm.ssl == "on" {
+	if prm.tlsEnable == true {
+		tlsConfig := &tls.Config{
+			InsecureSkipVerify: prm.tlsSkipValidation,
+			ServerName:         prm.tlsHostname,
+		}
+		if !prm.tlsSkipValidation {
+			bs, err := ioutil.ReadFile(prm.tlsCAFile)
+			if err != nil {
+				return nil, fmt.Errorf("error reading file at ssl-ca path '%s': %w",
+					prm.tlsCAFile, err)
+			}
+			tlsConfig.RootCAs = enrichCACertPool(bs)
+		}
 		return tls.DialWithDialer(&net.Dialer{Timeout: time.Duration(prm.loginTimeout) * time.Second},
-			"tcp", prm.host, &tls.Config{InsecureSkipVerify: true})
+			"tcp", prm.host, tlsConfig)
 	}
 
 	return net.DialTimeout("tcp", prm.host,
 		time.Duration(prm.loginTimeout)*time.Second)
+}
+
+func enrichCACertPool(caCerts []byte) *x509.CertPool {
+	rootCAs, _ := x509.SystemCertPool()
+	if rootCAs == nil {
+		rootCAs = x509.NewCertPool()
+	}
+
+	rootCAs.AppendCertsFromPEM(caCerts)
+	return rootCAs
 }
 
 // login sends the login packets. Login and capabilities required.

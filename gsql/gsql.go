@@ -25,32 +25,35 @@ import (
 )
 
 var (
-	version         = "0.01"
-	noHeader        = false
-	echoInput       = false
-	noPSInInput     = false
-	printVersion    = false
-	chained         = false
-	packetSize      = 512
-	terminator      = ";|^go"
-	database        = "master"
-	hostname        string
-	inputFile       string
-	charset         string
-	loginTimeout    = 60
-	outputFile      string
-	password        string
-	columnSeparator = " "
-	server          string
-	commandTimeout  = 0
-	pageSize        = 3000
-	userName        string
-	locale          string
-	width           int
-	ssl             = "off"
-	theme           = "UtfCompact"
-	outFormat       = "table"
-	re              *regexp.Regexp
+	version           = "0.01"
+	noHeader          = false
+	echoInput         = false
+	noPSInInput       = false
+	printVersion      = false
+	chained           = false
+	packetSize        = 512
+	terminator        = ";|^go"
+	database          = "master"
+	hostname          string
+	inputFile         string
+	charset           string
+	loginTimeout      = 60
+	outputFile        string
+	password          string
+	columnSeparator   = " "
+	server            string
+	commandTimeout    = 0
+	pageSize          = 3000
+	userName          string
+	locale            string
+	width             int
+	tlsEnable         = false //Enforce TLS use
+	tlsHostname       string  //Remote hostname to validate against SANs
+	tlsSkipValidation = false //Skip TLS validation - accepts any TLS certificate
+	tlsCAFile         string  //Path to CA file to validate server certificate against
+	theme             = "UtfCompact"
+	outFormat         = "table"
+	re                *regexp.Regexp
 )
 
 func usage() {
@@ -83,7 +86,10 @@ func init() {
 	flag.IntVar(&commandTimeout, "t", 0, "command Timeout")
 	flag.IntVar(&width, "w", 0, "line width")
 	flag.StringVar(&userName, "U", "none", "user name")
-	flag.StringVar(&ssl, "x", ssl, "Set to 'on' to enable ssl")
+	flag.BoolVar(&tlsEnable, "tls-enable", tlsEnable, "Enforce TLS use")
+	flag.StringVar(&tlsHostname, "tls-hostname", " ", "Remote hostname to validate against SANs")
+	flag.BoolVar(&tlsSkipValidation, "tls-skip-validation", tlsSkipValidation, "Skip TLS validation - accepts any TLS certificate")
+	flag.StringVar(&tlsCAFile, "tls-ca-file", " ", "Path to CA file to validate server certificate against")
 	flag.StringVar(&locale, "z", "none", "locale name")
 	flag.StringVar(&outFormat, "f", outFormat, "output format. Can be 'table','json', or 'csv'")
 	flag.Parse()
@@ -107,9 +113,6 @@ func buildCnxStr() string {
 	}
 	if packetSize != 0 {
 		v.Set("packetSize", fmt.Sprintf("%d", packetSize))
-	}
-	if ssl == "on" {
-		v.Set("ssl", "on")
 	}
 	v.Set("hostname", hostname)
 	v.Set("readTimeout", "10")

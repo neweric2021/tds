@@ -30,7 +30,11 @@ type connParams struct {
 	database     string // if requested at connection time
 	pid          string
 	textSize     int
-	ssl          string
+	// tls config
+	tlsEnable         bool   //Enforce TLS use
+	tlsHostname       string //Remote hostname to validate against SANs
+	tlsSkipValidation bool   //Skip TLS validation - accepts any TLS certificate
+	tlsCAFile         string //Path to CA file to validate server certificate against
 	// yes: mandatory password encryption.
 	// no: never encrypt password.
 	// try: try encryption, fallback to non encrypted password.
@@ -89,9 +93,18 @@ func parseDSN(dsn string) (prm connParams, err error) {
 		return prm, fmt.Errorf("tds: encryptPassword must be 'yes', 'no' or 'try'")
 	}
 
-	// ssl ??
-	if values.Get("ssl") == "on" {
-		prm.ssl = "on"
+	// tls
+	prm.tlsEnable, err = strconv.ParseBool(values.Get("tls-enable"))
+	if err != nil {
+		return prm, fmt.Errorf("can not parse param tls-enable")
+	}
+	if prm.tlsEnable {
+		prm.tlsHostname = values.Get("tls-hostname")
+		prm.tlsSkipValidation, err = strconv.ParseBool(values.Get("tls-skip-validation"))
+		if err != nil {
+			return prm, fmt.Errorf("can not parse param tls-skip-validation")
+		}
+		prm.tlsCAFile = values.Get("tls-ca-file")
 	}
 
 	switch values.Get("charset") {
