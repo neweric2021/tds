@@ -69,7 +69,7 @@ The most common ones are:
 
 Less frequently used ones:
 
-	- tls-enable - Enforce TLS use
+    - tls-enable - Enforce TLS use
     - tls-hostname - Remote hostname to validate against SANs
     - tls-skip-validation - Skip TLS validation. Accepts any TLS certificate
     - tls-ca-file - Path to CA file to validate server certificate against
