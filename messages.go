@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"strconv"
 
-	bin "github.com/thda/tds/binary"
+	bin "github.com/neweric2021/tds/binary"
 
 	"errors"
 )

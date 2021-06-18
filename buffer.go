@@ -14,7 +14,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	bin "github.com/thda/tds/binary"
+	bin "github.com/neweric2021/tds/binary"
 )
 
 // headerSize is the size of the tds header
