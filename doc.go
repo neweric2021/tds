@@ -17,7 +17,7 @@ Installation
 
 Package installation is done via go-get:
 
-	$ go get -u github.com/thda/tds
+	$ go get -u github.com/neweric2021/tds
 
 Usage
 
@@ -28,7 +28,7 @@ use the regular database/sql APIs:
 	import (
 		"database/sql"
 
-		_ "github.com/thda/tds"
+		_ "github.com/neweric2021/tds"
 	)
 
 	func main() {

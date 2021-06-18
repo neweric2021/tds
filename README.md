@@ -1,5 +1,5 @@
 # tds
-`import "github.com/thda/tds"`
+`import "github.com/neweric2021/tds"`
 
 Package tds is a pure Go Sybase ASE/IQ/RS driver for the database/sql package.
 
@@ -18,7 +18,7 @@ Requirements
 Package installation is done via go-get:
 
 
-	$ go get -u github.com/thda/tds
+	$ go get -u github.com/neweric2021/tds
 
 ### Usage
 It implements most of the database/sql functionalities.
@@ -29,7 +29,7 @@ use the regular database/sql APIs:
 	import (
 		"database/sql"
 	
-		_ "github.com/thda/tds"
+		_ "github.com/neweric2021/tds"
 	)
 	
 	func main() {

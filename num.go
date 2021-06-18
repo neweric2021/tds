@@ -10,7 +10,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/thda/tds/binary"
+	"github.com/neweric2021/tds/binary"
 
 	"errors"
 )

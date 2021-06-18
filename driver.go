@@ -190,7 +190,7 @@ type SybDriver struct {
 var sybDriverInstance = &SybDriver{}
 
 // Open opens a connection to the server.
-// See https://github.com/thda/tds#connection-string for the dsn formatting.
+// See https://github.com/neweric2021/tds#connection-string for the dsn formatting.
 // It also set the custum error handler if any.
 func (d *SybDriver) Open(dsn string) (driver.Conn, error) {
 	conn, err := NewConn(dsn)
