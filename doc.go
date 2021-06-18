@@ -68,8 +68,10 @@ The most common ones are:
 
 Less frequently used ones:
 
- - ssl - Whether or not to use SSL. The default is not to use ssl.
-   Set to "on" if the server is setup to use ssl.
+ - tls-enable - Enforce TLS use
+ - tls-hostname - Remote hostname to validate against SANs
+ - tls-skip-validation - Skip TLS validation. Accepts any TLS certificate
+ - tls-ca-file - Path to CA file to validate server certificate against
  - encryptPassword - Can be "yes" to require password encryption,
    "no" to disable it, and "try" to try encrytping password an falling back
    to plain text password. Password encryption works on Sybase ASE 15.5
